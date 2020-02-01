@@ -1,0 +1,33 @@
+version: "3"
+services:
+  web3:
+    build:
+      context: ./apache-php3
+    ports: 
+      - 60:80
+    privileged: true
+    links:
+      - db3
+    volumes:
+      - "./mylaravel/:/var/www/html"
+      - "./apache-php3/apache.conf:/etc/httpd/conf/httpd.conf"
+    container_name: "apache-php3"
+  db3:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "13306:3306"
+    container_name: "mysql5.7.3"
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - db3
+    ports:
+      - 6060:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db3
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    container_name: "phpmyadmin-la3"
